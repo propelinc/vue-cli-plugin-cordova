@@ -204,11 +204,16 @@ module.exports = (api, options) => {
     // set build output folder
     args.dest = cordovaPath + '/www'
     // build
+    const cordovaDebugBuild = !!args['cordova-debug']
+    if (args.hasOwnProperty('cordova-debug')) {
+      // delete the arg before it gets passed to vue
+      delete args['cordova-debug']
+    }
     await api.service.run('build', args)
     // cordova clean
     await cordovaClean()
     // cordova build --release (if you want a build debug build, use cordovaBuild(platform, false)
-    await cordovaBuild(platform)
+    await cordovaBuild(platform, !cordovaDebugBuild)
   }
 
   const runPrepare = async (args) => {
